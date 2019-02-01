@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+/*********************************************************************
+** MetaDataStore.proto
+** Date: 16.01.2019
+** Author: Venkat Masuldari   
+**
+** gRPC interface definition for MetaData File Transfer
+**
+**
+** APIs
+**    //create or update the metadata tar file
+**    rpc  Upload(stream UploadRequest) returns (UploadResponse) {}
+**    //read the metadata tar files
+**    rpc Download (DownloadRequest) returns (stream DownloadResponse) {}
+**    //delete the metadata tar files
+**    rpc Delete (DeleteRequest) returns (DeleteResponse) {}
+**    
+**    
+** =============
+***********************************************************************/
+
+option go_package = "MetaDataStore";
+
+package MetaDataStore;
+
+//import "google/api/annotations.proto";
+
+//it will create the metadata file sent in this request
+message UploadRequest {
+     
+    MetaDataInfo metadata_info = 1;
+    bytes metadata_tar = 2;
+}
+message UploadResponse {
+    status status = 1;
+    
+}
+//this will read the metadata for perticular vnf type and returns metadata tar file
+message DownloadRequest {
+    MetaDataInfo metadata_info = 1;
+}
+// response with metadata 
+message DownloadResponse {
+    status status = 1;
+    //metadata zip file 
+    bytes metadata_tar = 2;
+    
+}
+
+// to delete the existing metadata stored in the ztsl
+message DeleteRequest {
+    // 
+    MetaDataInfo metadata_info = 1;
+}
+// delete response with the status
+message DeleteResponse {
+    status status = 1;
+    
+}
+message status{
+    string DetailedErrorResponse =1;
+    statuscode statuscode =2;
+}
+enum statuscode {
+     unknown =0;
+     ok =1;
+     failed =2;
+}
+
+message MetaDataInfo{
+    // sourcetype 
+    string source_type = 1;
+    // vnf version example: major/9.0 | minorr/0.1
+    string version =2;
+    // type of metadata example : type1
+    MetadataType metadata_type = 3;
+    // type of metadata example : ALL
+    MetadataSubType metadata_subtype = 4;
+}
+
+enum MetadataType {
+    ALLTYPE = 0;
+    type1 = 1;
+    type2 = 2;
+    type3 = 3;
+}
+enum MetadataSubType {
+    ALLSUBTYPE = 0;
+    subtype1 = 1;
+    subtype2 = 2;
+    subtype3 = 3;
+}  
+
+service MetaDataStore {
+    //create or update the metadata tar file
+    rpc Upload (stream UploadRequest) returns (UploadResponse) {}
+    /*rpc Onboard(stream OnboardRequest) returns (OnboardResponse) {
+            option (google.api.http) = {
+              post: "/v1/example/echo"
+              body: "*"
+            };
+          }
+          */
+    //read the metadata tar files
+    rpc Download (DownloadRequest) returns (stream DownloadResponse) {}
+    //delete the metadata tar files
+    rpc Delete (DeleteRequest) returns (DeleteResponse) {}
+    
+    
+}

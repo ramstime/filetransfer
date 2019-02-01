@@ -1,0 +1,7 @@
+GIT_TOP=${PWD}
+TEST_PARENT_DIR := ${CURDIR}/test_report
+COVERAGE_DIR := ${TEST_PARENT_DIR}/coverage.$(shell date -Iseconds)
+COVERAGE_HTML := ${COVERAGE_DIR}/coverage.html
+COVERAGE_PROFILE := ${COVERAGE_DIR}/cover_profile.out
+
+
